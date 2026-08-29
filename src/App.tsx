@@ -4,15 +4,13 @@ import { useAttendance } from './hooks/useAttendance';
 import { loadLectures } from './utils/storage';
 import { AssignmentDashboard } from './components/assignment/AssignmentDashboard';
 import { AttendanceDashboard } from './components/attendance/AttendanceDashboard';
+import { TimetableWorkspace } from './components/timetable/TimetableWorkspace';
 import {
   Calendar,
   ListTodo,
   GraduationCap,
   Moon,
   Sun,
-  AlertTriangle,
-  Clock,
-  Sparkles,
   RotateCcw,
 } from 'lucide-react';
 import { resetAllStorage } from './utils/storage';
@@ -199,89 +197,8 @@ export default function App() {
           />
         )}
 
-        {/* Timetable Overview Tab */}
-        {activeTab === 'timetable' && (
-          <div className="space-y-6">
-            <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
-                    <Sparkles className="w-5 h-5 text-indigo-500" />
-                    2026年度 前期 受講科目サマリー
-                  </h3>
-                  <p className="text-xs text-slate-500 mt-1">
-                    登録講義数: {lectures.length}科目 / 総取得可能単位: {lectures.reduce((acc, l) => acc + (l.credits || 0), 0)}単位
-                  </p>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                {lectures.map((lec) => {
-                  const lecAssignments = assignmentsManager.getAssignmentsByLecture(lec.id);
-                  const pendingCount = lecAssignments.filter((a) => a.status === 'pending').length;
-                  const risk = attendanceManager.getAttendanceRisk(lec.id);
-
-                  return (
-                    <div
-                      key={lec.id}
-                      className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 hover:border-indigo-300 transition-colors"
-                    >
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400">
-                          {lec.dayOfWeek.toUpperCase()} {lec.period}限
-                        </span>
-                        {risk.status === 'danger' ? (
-                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300">
-                            単位危険
-                          </span>
-                        ) : risk.status === 'warning' ? (
-                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300">
-                            欠席注意
-                          </span>
-                        ) : (
-                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
-                            順調
-                          </span>
-                        )}
-                      </div>
-
-                      <h4 className="text-sm font-bold text-slate-900 dark:text-slate-100 line-clamp-1">
-                        {lec.name}
-                      </h4>
-                      <p className="text-xs text-slate-500 mt-0.5">{lec.instructor} / {lec.room}</p>
-
-                      <div className="mt-3 pt-2.5 border-t border-slate-200/80 dark:border-slate-800 flex items-center justify-between text-xs">
-                        <span className="text-slate-600 dark:text-slate-400 flex items-center gap-1">
-                          <Clock className="w-3 h-3 text-slate-400" />
-                          未完了課題: <strong className="text-slate-900 dark:text-slate-100">{pendingCount}件</strong>
-                        </span>
-                        <span className="text-slate-600 dark:text-slate-400 flex items-center gap-1">
-                          <AlertTriangle className="w-3 h-3 text-slate-400" />
-                          欠席: <strong className="text-slate-900 dark:text-slate-100">{risk.absent}/{risk.maxAllowed}回</strong>
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              <div className="mt-6 flex flex-wrap gap-3">
-                <button
-                  onClick={() => setActiveTab('assignments')}
-                  className="px-4 py-2 text-xs font-semibold rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 transition-colors shadow-sm"
-                >
-                  課題ダッシュボードを開く →
-                </button>
-                <button
-                  onClick={() => setActiveTab('attendance')}
-                  className="px-4 py-2 text-xs font-semibold rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 transition-colors"
-                >
-                  出欠・単位リスク管理を開く →
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+        {/* Timetable management tab */}
+        {activeTab === 'timetable' && <TimetableWorkspace />}
       </main>
     </div>
   );
