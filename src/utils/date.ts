@@ -89,14 +89,14 @@ export function formatRelativeDue(dueDate: string, status: AssignmentStatus): {
   }
 
   if (days === 1) {
-    return { text: `明日 ${formatTimeOnly(dueDate)}`, urgency: 'urgent' };
+    return { text: `明日 ${formatTimeOnly(dueDate)}`, urgency };
   }
 
   if (days <= 3) {
-    return { text: `あと${days}日 (${formatDateOnly(dueDate)})`, urgency: 'warning' };
+    return { text: `あと${days}日 (${formatDateOnly(dueDate)})`, urgency };
   }
 
-  return { text: formatDateOnly(dueDate), urgency: 'normal' };
+  return { text: formatDateOnly(dueDate), urgency };
 }
 
 export function formatTimeOnly(isoString: string): string {

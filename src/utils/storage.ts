@@ -33,7 +33,7 @@ function safeSetItem<T>(key: string, value: T): void {
 // Assignments Storage
 export function loadAssignments(): Assignment[] {
   const existing = safeGetItem<Assignment[] | null>(KEYS.ASSIGNMENTS, null);
-  if (!existing || existing.length === 0) {
+  if (existing === null) {
     saveAssignments(SAMPLE_ASSIGNMENTS);
     return SAMPLE_ASSIGNMENTS;
   }
